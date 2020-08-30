@@ -1,15 +1,26 @@
 #! /usr/bin/env python3
 
-print('Hi, I am a chess bot!')
+import chess
+
+board = chess.Board()
 
 def main():
-    done = False
+    print('Hello! Input \'Exit\' to exit board')
     user_input = ''
-    while not done:
+    while True:
+        print(board)
         user_input = input('Please input move: ')
-        if user_input=='E':
-            done = True
-        print('Your input was: '+user_input)
+        if user_input=='Exit':
+            exit()
+        try:
+            chess.Move.from_uci(user_input)
+        except ValueError: 
+            print('**ERROR**:  Move not possible!')
+            continue
+        if not chess.Move.from_uci(user_input) in board.legal_moves:
+            print('**ERROR**:  Move not legal!')
+        else :
+            board.push_uci(user_input)
 
 if __name__=='__main__':
     main()
