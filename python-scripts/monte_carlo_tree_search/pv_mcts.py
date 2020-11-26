@@ -49,8 +49,9 @@ def pv_mcts_scores(model, state, temperature):
 				self.n += 1
 
 				self.child_nodes = []
-				for action, policy in zip(self.state.legal_actions(), policies):
-					self.child_nodes.append(node(self.state.next(action), policy))
+				for action_num, policy in zip(self.state.legal_actions(), policies):
+					self.state.next(action_num)
+					self.child_nodes.append(node(self.state.board_array, policy))
 				return value
 			else:
 				value = -self.next_child_node().evaluate()
@@ -74,20 +75,21 @@ def pv_mcts_scores(model, state, temperature):
 		root_node.evaluate()
 
 	scores = nodes_to_scores(root_node.child_nodes)
+	print(temperature)
 	if temperature == 0:
 		action = np.argmax(scores)
 		scores = np.zeros(len(scores))
-		scores[action] = 1
+		scores[action_num] = 1
 	else:
 		scores = boltzman(scores, temperature)
 
 	return scores
 
-def pv_mcts_action(model, temperature=0):
-	def pv_mcts_action(state):
+def pv_mcts_action_num(model, temperature=0):
+	def pv_mcts_action_num(state):
 		scores = pv_mcts_scores(model, state, temperature)
 		return np.random.choice(state.legal_actions(), p=scores)
-	return pv_mcts_action
+	return pv_mcts_action_num
 
 def boltzman(xs, temperature):
 	xs = [x ** (1 / temperature) for x in xs]
@@ -99,13 +101,13 @@ if __name__ == '__main__':
 
 	state = State()
 
-	next_action = pv_mcts_action(model, 1.0)
+	next_action = pv_mcts_action_num(model, 1.0)
 
 	while True:
 		if state.is_done():
 			break
 
 		action = next_action(state)
-		state = state.next(action)
+		state.next(action_num)
 
-		print(state)
+		print(state.board)

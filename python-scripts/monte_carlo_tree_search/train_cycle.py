@@ -10,10 +10,5 @@ for i in range(10):
 	print('Train', i, '===================')
 
 	self_play()
-
 	train_network()
-
-	update_best_player = evaluate_network()
-
-	# if update_best_player:
-	# 	evaluate_best_player()
+	evaluate_network()

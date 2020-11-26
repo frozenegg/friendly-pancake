@@ -34,12 +34,12 @@ def play(model):
 
 		scores = pv_mcts_scores(model, state, SP_TEMPERATURE)
 		policies = [0] * DN_OUTPUT_SIZE
-		for action, policy in zip(state.legal_actions(), scores):
-			policies[action] = policy
+		for action_num, policy in zip(state.legal_actions(), scores):
+			policies[action_num] = policy
 		history.append([[state.pieces, state.enemy_pieces], policies, None])
 
-		action = np.random.choice(state.legal_actions(), p=scores)
-		state = state.next(action)
+		action_num = np.random.choice(state.legal_actions(), p=scores)
+		state.next(action_num)
 
 	value = first_player_value(state)
 	for i in range(len(history)):
@@ -54,6 +54,7 @@ def self_play():
 	for i in range(SP_GAME_COUNT):
 		h = play(model)
 		history.extend(h)
+		print(history)
 
 		print('\rSelfPlay {}/{}'.format(i+1, SP_GAME_COUNT), end='')
 	print('')

@@ -6,8 +6,8 @@ import os
 
 DN_FILTERS = 128
 DN_RESIDUAL_NUM = 16
-DN_INPUT_SHAPE = (3,3,2)
-DN_OUTPUT_SIZE = 9
+DN_INPUT_SHAPE = (8,8,2)
+DN_OUTPUT_SIZE = 64
 
 def conv(filters):
 	return Conv2D(filters, 3, padding='same', use_bias=False, kernel_initializer='he_normal', kernel_regularizer=l2(0.0005))
