@@ -3,11 +3,20 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras import backend as K
 import os
+import pickle
 
 DN_FILTERS = 128
 DN_RESIDUAL_NUM = 16
 DN_INPUT_SHAPE = (8,8,2)
-DN_OUTPUT_SIZE = 64
+
+# try:
+# 	with open('action_list.txt', 'rb') as f:
+# 			action_list = pickle.load(f)
+# 	DN_OUTPUT_SIZE = len(action_list)
+# except:
+# 	DN_OUTPUT_SIZE = 0
+
+DN_OUTPUT_SIZE = 10**5
 
 def conv(filters):
 	return Conv2D(filters, 3, padding='same', use_bias=False, kernel_initializer='he_normal', kernel_regularizer=l2(0.0005))

@@ -46,7 +46,8 @@ class State:
 		return self.board.is_stalemate() and self.board.is_insufficient_material()
 
 	def is_done(self):
-		return self.board.is_game_over()
+		board_array = self.board_array.flatten()
+		return 'K' and 'k' not in board_array
 
 	def next(self, action_num):
 		with open('action_list.txt', 'rb') as f:
@@ -57,17 +58,27 @@ class State:
 		self.convert_players()
 
 	def convert_players(self):
-		board_state = self.board_array[::-1]
-		board_array = board_state.flatten()
+		board_state = self.board.fen()
+		board_state = board_state.split(' ')
+		board_pieces = list(board_state[0])
+
 		white = ['P', 'R', 'N', 'B', 'Q', 'K']
 		black = ['p', 'r', 'n', 'b', 'q', 'k']
-		for i in range(len(board_array)):
-			if board_array[i] in white:
-				board_array[i] = black[white.index(board_array[i])]
-			elif board_array[i] in black:
-				board_array[i] = white[black.index(board_array[i])]
 
-		return board_array.reshape([8,-1])
+		for i in range(len(board_pieces)):
+		  if board_pieces[i] in white:
+		    board_pieces[i] = black[white.index(board_pieces[i])]
+		  elif board_pieces[i] in black:
+		    board_pieces[i] = white[black.index(board_pieces[i])]
+
+		board_state[0] = ''.join(board_pieces)
+		board_state[0] = board_state[0].split('/')
+		board_state[0].reverse()
+		board_state[0] = '/'.join(board_state[0])
+		board_state[1] = 'b'
+		board_state_modified = ' '.join(board_state)
+
+		self.board = chess.Board(board_state_modified)
 
 	def legal_actions(self):
 		legal_actions = []
@@ -93,6 +104,7 @@ class State:
 		with open('action_list.txt', 'wb') as f:
 			pickle.dump(action_list, f)
 
+		# print('legal_actions:', legal_action_num)
 		return legal_action_num
 
 	def is_first_player(self):
@@ -114,7 +126,8 @@ if __name__ == '__main__':
 		if state.is_done():
 			break
 
-		state.next(random_action(state))
+		move = chess.Move.from_uci(random_action(state))
+		state.board.push(move)
 
 		print(state.board)
 		print()

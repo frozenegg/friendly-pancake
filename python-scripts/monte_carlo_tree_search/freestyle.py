@@ -42,7 +42,7 @@ def convert_players(board_state):
 
 	return board_array.reshape([8,-1])
 
-print(convert_players(board_array))
+# print(convert_players(board_array))
 
 def my_pieces(board_array):
 	board_array = board_array.flatten()
@@ -86,6 +86,8 @@ for action in legal_action:
 
 with open('action_list.txt', 'wb') as f:
 	pickle.dump(action_list, f)
+
+print(action_list)
 
 array = ['a', 'b']
 print('a' not in array)

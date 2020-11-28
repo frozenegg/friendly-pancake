@@ -1,6 +1,6 @@
 from game import State
 from pv_mcts import pv_mcts_scores
-from dual_network import DN_OUTPUT_SIZE
+# from dual_network import DN_OUTPUT_SIZE
 from datetime import datetime
 from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
@@ -33,12 +33,30 @@ def play(model):
 			break
 
 		scores = pv_mcts_scores(model, state, SP_TEMPERATURE)
-		policies = [0] * DN_OUTPUT_SIZE
-		for action_num, policy in zip(state.legal_actions(), scores):
-			policies[action_num] = policy
+
+		with open('action_list.txt', 'rb') as f:
+			action_list = pickle.load(f)
+
+		# print('action_list:', len(action_list))
+
+		policies = np.zeros(len(action_list))
+		# for action_num, policy in zip(state.legal_actions(), scores):
+		# 	policies[action_num] = policy
+
+		# print('size check', len(policies), len(scores))
+
+		legal_actions = state.legal_actions()
+
+		for i in range(len(legal_actions)):
+			policies[legal_actions[i]] = scores[i]
+			# print(policies)
+		# print('policies:', policies)
 		history.append([[state.pieces, state.enemy_pieces], policies, None])
 
+		# action_list_num = np.arange(len(action_list))
+		# action_num = np.random.choice(action_list_num, p=scores)
 		action_num = np.random.choice(state.legal_actions(), p=scores)
+		# print(action_num)
 		state.next(action_num)
 
 	value = first_player_value(state)
@@ -54,7 +72,7 @@ def self_play():
 	for i in range(SP_GAME_COUNT):
 		h = play(model)
 		history.extend(h)
-		print(history)
+		# print(history)
 
 		print('\rSelfPlay {}/{}'.format(i+1, SP_GAME_COUNT), end='')
 	print('')

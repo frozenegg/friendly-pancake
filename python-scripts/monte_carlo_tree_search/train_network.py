@@ -18,6 +18,7 @@ def train_network():
 
 	a,b,c = DN_INPUT_SHAPE
 	xs = np.array(xs)
+	# print(xs)
 	xs = xs.reshape(len(xs), c, a, b).transpose(0,2,3,1)
 	y_policies = np.array(y_policies)
 	y_values = np.array(y_values)
