@@ -39,7 +39,10 @@ def predict(model, state):
 	# policies = y[0][0][legal_actions_binary]
 	policies = [y[0][0][i] if legal_actions_binary[i] == 1 else 0 for i in range(len(legal_actions_binary))]
 	print('policies:', policies)
-	policies /= sum(policies) if sum(policies) else 1
+	try:
+		policies /= sum(policies)
+	except:
+		policies = np.ones(len(policies))
 
 	value = y[1][0][0]
 	# print('polices:', policies)

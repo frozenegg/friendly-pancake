@@ -43,11 +43,11 @@ class State:
 		return 'K' not in board_array
 
 	def is_draw(self):
-		return self.board.is_stalemate() and self.board.is_insufficient_material()
+		return self.board.is_stalemate() or self.board.is_insufficient_material()
 
 	def is_done(self):
 		board_array = self.board_array.flatten()
-		return 'K' and 'k' not in board_array
+		return ('K' and 'k' not in board_array) or self.board.is_stalemate() or self.board.is_insufficient_material()
 
 	def next(self, action_num):
 		with open('action_list.txt', 'rb') as f:
