@@ -86,6 +86,8 @@ class State:
 		for i in self.board.legal_moves:
 	  		legal_actions.append(str(i))
 
+		random.shuffle(legal_actions)
+
 		try:
 			with open('action_list.txt', 'rb') as f:
 				action_list = pickle.load(f)
