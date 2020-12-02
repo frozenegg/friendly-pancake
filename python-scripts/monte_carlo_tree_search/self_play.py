@@ -55,7 +55,7 @@ def play(model):
 
 		# action_list_num = np.arange(len(action_list))
 		# action_num = np.random.choice(action_list_num, p=scores)
-		action_num = np.random.choice(state.legal_actions(), p=scores)
+		action_num = np.random.choice(legal_actions, p=scores)
 		# print(action_num)
 		state.next(action_num)
 
